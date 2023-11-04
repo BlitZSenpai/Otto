@@ -6,13 +6,13 @@ const AuthCallbackPage = () => {
   const searchParams = useSearchParams();
   const origin = searchParams.get("origin");
 
-  const {data, isLoading} = trpc.authCallback.useQuery(undefined, {
-    onSuccess: ({success}) => {
-      if(success) {
-        router.push(origin ? `/${origin}` : "/dashboard")
+  const { data, isLoading, onSuccess } = trpc.authCallback.useQuery(undefined, {
+    onSuccess: ({ success }) => {
+      if (success) {
+        router.push(origin ? `/${origin}` : "/dashboard");
       }
-    }
-  })
+    },
+  });
 };
 
 export default AuthCallbackPage;
