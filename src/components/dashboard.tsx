@@ -9,7 +9,13 @@ import { format } from "date-fns";
 import { Button } from "./ui/button";
 
 export const Dashboard = () => {
+  const utils = trpc.useUtils();
   const { data: files, isLoading } = trpc.getUserFiles.useQuery();
+  const { mutate: deleteFile } = trpc.deleteFile.useMutation({
+    onSuccess: () => {
+      utils.getUserFiles.invalidate();
+    },
+  });
 
   return (
     <main className="mx-auto max-w-7xl md:p-10">
@@ -44,7 +50,11 @@ export const Dashboard = () => {
                     <MessageSquare className="h-4 w-4" />
                     mock
                   </div>
-                  <Button className="w-full" size="sm" variant="destructive">
+                  <Button
+                    onClick={() => deleteFile({ id: file.id })}
+                    className="w-full"
+                    size="sm"
+                    variant="destructive">
                     <Trash className="h-4 w-4" />
                   </Button>
                 </div>
