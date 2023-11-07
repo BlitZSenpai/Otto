@@ -100,6 +100,7 @@ const UploadDropzone = () => {
                   <Progress value={uploadPorgress} className="h-1 w-full text-blue-600 bg-zinc-200" />
                 </div>
               ) : null}
+              <input {...getInputProps()} type="file" id="dropzone-file" className="hidden" />
             </label>
           </div>
         </div>
