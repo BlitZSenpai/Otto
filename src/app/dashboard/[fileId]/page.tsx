@@ -1,4 +1,4 @@
-import { ChatWrapper } from "@/components/chatwrapper";
+import { ChatWrapper } from "@/components/chat/chatwrapper";
 import { PdfRenderer } from "@/components/pdfrenderer";
 import { db } from "@/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
