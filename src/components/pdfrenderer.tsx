@@ -15,6 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import SimpleBar from "simplebar-react";
+import { PdfFullscreen } from "./pdffullscreen";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -61,6 +62,7 @@ export const PdfRenderer = ({ url }: PdfRendererProps) => {
             disabled={currentPage <= 1}
             onClick={() => {
               setCurrentPage((current) => (current - 1 > 1 ? current - 1 : 1));
+              setValue("page", String(currentPage - 1));
             }}
             variant="ghost"
             aria-label="previous page">
@@ -85,6 +87,7 @@ export const PdfRenderer = ({ url }: PdfRendererProps) => {
             disabled={numPages === undefined || currentPage === numPages}
             onClick={() => {
               setCurrentPage((current) => (current + 1 > numPages! ? numPages! : current + 1));
+              setValue("page", String(currentPage + 1));
             }}
             variant="ghost"
             aria-label="previous page">
@@ -112,6 +115,7 @@ export const PdfRenderer = ({ url }: PdfRendererProps) => {
             aria-label="rotate 90 degrees">
             <RotateCw className="h-4 w-4" />
           </Button>
+          <PdfFullscreen fileUrl={url} />
         </div>
       </div>
       <div className="flex-1 w-full max-h-screen">
