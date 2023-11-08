@@ -3,7 +3,7 @@
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
-import { ChevronDown, ChevronUp, Loader2, Search } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader2, RotateCw, Search } from "lucide-react";
 import { useToast } from "./ui/use-toast";
 import { useResizeDetector } from "react-resize-detector";
 import { Button } from "./ui/button";
@@ -26,6 +26,7 @@ export const PdfRenderer = ({ url }: PdfRendererProps) => {
   const [numPages, setNumPages] = useState<number>();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [scale, setScale] = useState<number>(1);
+  const [rotation, setRotation] = useState<number>(0);
   const { toast } = useToast();
   const { width, ref } = useResizeDetector();
 
@@ -93,7 +94,7 @@ export const PdfRenderer = ({ url }: PdfRendererProps) => {
         <div className="space-x-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="gap-1.5 mr-1" aria-label="zoom" variant="ghost">
+              <Button className="gap-1.5" aria-label="zoom" variant="ghost">
                 <Search className="w-4 h-4" />
                 {scale * 100}%<ChevronDown className="h-3 w-3 opacity-50" />
               </Button>
@@ -105,6 +106,12 @@ export const PdfRenderer = ({ url }: PdfRendererProps) => {
               <DropdownMenuItem onSelect={() => setScale(2.5)}>250%</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <Button
+            onClick={() => setRotation((prev) => prev + 90)}
+            variant="ghost"
+            aria-label="rotate 90 degrees">
+            <RotateCw className="h-4 w-4" />
+          </Button>
         </div>
       </div>
       <div className="flex-1 w-full max-h-screen">
@@ -126,7 +133,7 @@ export const PdfRenderer = ({ url }: PdfRendererProps) => {
               onLoadSuccess={({ numPages }: any) => setNumPages(numPages)}
               file={url}
               className="max-h-full">
-              <Page width={width ? width : 1} scale={scale} pageNumber={currentPage} />
+              <Page width={width ? width : 1} scale={scale} rotate={rotation} pageNumber={currentPage} />
             </Document>
           </div>
         </SimpleBar>
