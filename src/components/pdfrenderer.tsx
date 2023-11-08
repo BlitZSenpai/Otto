@@ -3,9 +3,12 @@
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
-import { Loader2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { useToast } from "./ui/use-toast";
 import { useResizeDetector } from "react-resize-detector";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { useState } from "react";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -14,12 +17,46 @@ interface PdfRendererProps {
 }
 
 export const PdfRenderer = ({ url }: PdfRendererProps) => {
+  const [numPages, setNumPages] = useState<number>();
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const { toast } = useToast();
   const { width, ref } = useResizeDetector();
+
   return (
     <div className="w-full bg-white rounded-md shadow flex flex-col items-center">
       <div className="h-14 w-full border-b border-zinc-200 flex items-center justify-between">
-        <div className="flex items-center gap-1.5">Top layer</div>
+        <div className="flex items-center gap-1.5 ml-1">
+          <Button
+            disabled={currentPage <= 1}
+            onClick={() => {
+              setCurrentPage((current) => (current - 1 > 1 ? current - 1 : 1));
+            }}
+            variant="ghost"
+            aria-label="previous page">
+            <ChevronDown className="h-4 w-4" />
+          </Button>
+          <div className="flex items-center gap-1.5">
+            <Input
+              type="text"
+              value={currentPage}
+              onChange={(e) => setCurrentPage(+e.target.value)}
+              className="w-12 h-8"
+            />
+            <p className="text-zinc-700 text-sm space-x-1">
+              <span>/</span>
+              <span>{numPages ?? "x"}</span>
+            </p>
+          </div>
+          <Button
+            disabled={numPages === undefined || currentPage === numPages}
+            onClick={() => {
+              setCurrentPage((current) => (current + 1 > numPages! ? numPages! : current + 1));
+            }}
+            variant="ghost"
+            aria-label="previous page">
+            <ChevronUp className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
       <div className="flex-1 w-full max-h-screen">
         <div ref={ref}>
@@ -36,9 +73,10 @@ export const PdfRenderer = ({ url }: PdfRendererProps) => {
                 variant: "destructive",
               });
             }}
+            onLoadSuccess={({ numPages }: any) => setNumPages(numPages)}
             file={url}
             className="max-h-full">
-            <Page width={width ? width : 1} pageNumber={1} />
+            <Page width={width ? width : 1} pageNumber={currentPage} />
           </Document>
         </div>
       </div>
