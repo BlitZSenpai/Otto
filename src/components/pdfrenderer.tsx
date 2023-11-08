@@ -9,6 +9,10 @@ import { useResizeDetector } from "react-resize-detector";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { cn } from "@/lib/utils";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -21,6 +25,29 @@ export const PdfRenderer = ({ url }: PdfRendererProps) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const { toast } = useToast();
   const { width, ref } = useResizeDetector();
+
+  const handlePageSubmit = ({ page }: TCustomPageValidator) => {
+    setCurrentPage(Number(page));
+    setValue("page", String(page));
+  };
+
+  const CustomPageValidator = z.object({
+    page: z.string().refine((num) => Number(num) > 0 && Number(num) <= numPages!),
+  });
+
+  type TCustomPageValidator = z.infer<typeof CustomPageValidator>;
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<TCustomPageValidator>({
+    defaultValues: {
+      page: "1",
+    },
+    resolver: zodResolver(CustomPageValidator),
+  });
 
   return (
     <div className="w-full bg-white rounded-md shadow flex flex-col items-center">
@@ -37,10 +64,13 @@ export const PdfRenderer = ({ url }: PdfRendererProps) => {
           </Button>
           <div className="flex items-center gap-1.5">
             <Input
-              type="text"
-              value={currentPage}
-              onChange={(e) => setCurrentPage(+e.target.value)}
-              className="w-12 h-8"
+              {...register("page")}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSubmit(handlePageSubmit)();
+                }
+              }}
+              className={cn("w-12 h-8", errors.page && "focus-visible:ring-red-500")}
             />
             <p className="text-zinc-700 text-sm space-x-1">
               <span>/</span>
