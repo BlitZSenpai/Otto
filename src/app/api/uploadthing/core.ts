@@ -4,7 +4,7 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { PineconeStore } from "langchain/vectorstores/pinecone";
-import { pinecone } from "@/lib/pinecone";
+import { getPineconeClient } from "@/lib/pinecone";
 
 const f = createUploadthing();
 
@@ -37,7 +37,8 @@ export const ourFileRouter = {
         const pageLevelDocs = await loader.load();
         const pageAmount = pageLevelDocs.length;
 
-        const pineconeIndex = pinecone.index("otto");
+        const pinecone = await getPineconeClient();
+        const pineconeIndex = pinecone.Index("otto");
 
         const embeddings = new OpenAIEmbeddings({
           openAIApiKey: process.env.OPENAI_API_KEY,
@@ -45,7 +46,7 @@ export const ourFileRouter = {
 
         await PineconeStore.fromDocuments(pageLevelDocs, embeddings, {
           pineconeIndex,
-          namespace: createdFile.id,
+          filter: { file: createdFile.id },
         });
 
         await db.file.update({
@@ -65,6 +66,7 @@ export const ourFileRouter = {
             id: createdFile.id,
           },
         });
+        console.log(err);
       }
     }),
 } satisfies FileRouter;
