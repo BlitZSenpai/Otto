@@ -31,6 +31,7 @@
     "langchain": "^0.0.184",
     "lucide-react": "^0.292.0",
     "next": "14.0.1",
+    "openai": "^4.17.0",
     "pdf-parse": "^1.1.1",
     "react": "^18",
     "react-dom": "^18",

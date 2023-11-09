@@ -1,7 +1,10 @@
 import { db } from "@/db";
+import { openai } from "@/lib/openai";
 import { getPineconeClient } from "@/lib/pinecone";
 import { SendMessageValidator } from "@/lib/validators/sendmessagevalidator";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { PineconeStore } from "langchain/vectorstores/pinecone";
 import { NextRequest } from "next/server";
 
 export const POST = async (req: NextRequest) => {
@@ -36,6 +39,39 @@ export const POST = async (req: NextRequest) => {
       fileId,
     },
   });
+
+  const embeddings = new OpenAIEmbeddings({
+    openAIApiKey: process.env.OPENAI_API_KEY,
+  });
+
   const pinecone = await getPineconeClient();
   const pineconeIndex = pinecone.Index("otto");
+
+  const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
+    pineconeIndex,
+    filter: { fileId },
+  });
+
+  const results = await vectorStore.similaritySearch(message, 4);
+
+  const prevMessages = await db.message.findMany({
+    where: {
+      fileId,
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+    take: 6,
+  });
+  const formattedMessages = prevMessages.map((msg) => ({
+    role: msg.isUserMessage ? ("user" as const) : ("assistant" as const),
+    content: msg.text,
+  }));
+
+  const response = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    temperature: 0,
+    stream: true,
+    messages: [],
+  });
 };
