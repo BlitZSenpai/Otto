@@ -50,7 +50,18 @@ export const appRouter = router({
 
       return { status: file.uploadStatus };
     }),
-
+  getFileMeessage: privateProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(200).nullish(),
+        cursor: z.string().nullish(),
+        fileId: z.string(),
+      })
+    )
+    .query(({ ctx, input }) => {
+      const { userId } = ctx;
+      const { fileId, cursor } = input;
+    }),
   getFile: privateProcedure.input(z.object({ key: z.string() })).mutation(async ({ ctx, input }) => {
     const { userId } = ctx;
 
