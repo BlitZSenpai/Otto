@@ -9,7 +9,7 @@ interface MessagesProps {
 }
 
 export const Messages = ({ fileId }: MessagesProps) => {
-  const { data, isLoading, fetchNextPage } = trpc.getFileMeessages.useInfiniteQuery(
+  const { data, isLoading, fetchNextPage } = trpc.getFileMessages.useInfiniteQuery(
     {
       fileId,
       limit: INFINITE_QUERY_LIMIT,
