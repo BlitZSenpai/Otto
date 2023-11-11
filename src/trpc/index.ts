@@ -51,7 +51,7 @@ export const appRouter = router({
 
       return { status: file.uploadStatus };
     }),
-  getFileMeessage: privateProcedure
+  getFileMeessages: privateProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(200).nullish(),
