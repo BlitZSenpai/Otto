@@ -84,6 +84,10 @@ export const ChatContextProvider = ({ fileId, children }: Props) => {
         previousMessages: previousMessages?.pages.flatMap((page) => page.messages) ?? [],
       };
     },
+    onError: (_, __, context) => {
+      setMessage(backupMessage.current);
+      utils.getFileMessages.setData({ fileId }, { messages: context?.previousMessages ?? [] });
+    },
   });
 
   const addMessage = () => sendMessage({ message });
