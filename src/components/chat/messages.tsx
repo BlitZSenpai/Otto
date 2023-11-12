@@ -3,8 +3,9 @@ import { INFINITE_QUERY_LIMIT } from "@/config/infinite-query";
 import { Loader2, MessageSquare } from "lucide-react";
 import Skeleton from "react-loading-skeleton";
 import { Message } from "./message";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { ChatContext } from "./chatcontext";
+import { useIntersection } from "@mantine/hooks";
 
 interface MessagesProps {
   fileId: string;
@@ -38,6 +39,19 @@ export const Messages = ({ fileId }: MessagesProps) => {
 
   const combinedMessages = [...(isAiThinking ? [loadingMessage] : []), ...(messages ?? [])];
 
+  const lastMessageRef = useRef<HTMLDivElement>(null);
+
+  const { ref, entry } = useIntersection({
+    root: lastMessageRef.current,
+    threshold: 1,
+  });
+
+  useEffect(() => {
+    if (entry?.isIntersecting) {
+      fetchNextPage();
+    }
+  }, [entry, fetchNextPage]);
+
   return (
     <div className="flex max-h-[calc(100vh-3.5rem-7rem)] border-zinc-200 flex-1 flex-col-reverse gap-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
       {combinedMessages && combinedMessages.length > 0 ? (
@@ -46,7 +60,12 @@ export const Messages = ({ fileId }: MessagesProps) => {
             combinedMessages[i - 1]?.isUserMessage === combinedMessages[i]?.isUserMessage;
           if (i === combinedMessages.length - 1) {
             return (
-              <Message message={message} isNextMessageSamePerson={isNextMessageSamePerson} key={message.id} />
+              <Message
+                ref={ref}
+                message={message}
+                isNextMessageSamePerson={isNextMessageSamePerson}
+                key={message.id}
+              />
             );
           } else
             return (
