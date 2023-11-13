@@ -158,8 +158,8 @@ const Page = async () => {
                           className: "w-full",
                           variant: "secondary",
                         })}>
-                        {user ? "Upgrade now" : "Sign up"}
-                        <ArrowRight className="h-5 w-5 ml-1.5" />
+                        {user ? "Upgrade" : "Sign up"}
+                        <ArrowRight className="h-4 w-4 ml-1.5" />
                       </Link>
                     ) : user ? (
                       <UpgradeButton />
@@ -169,8 +169,8 @@ const Page = async () => {
                         className={buttonVariants({
                           className: "w-full",
                         })}>
-                        {user ? "Upgrade now" : "Sign up"}
-                        <ArrowRight className="h-5 w-5 ml-1.5" />
+                        {user ? "Upgrade" : "Sign up"}
+                        <ArrowRight className="h-4 w-4 ml-1.5" />
                       </Link>
                     )}
                   </div>
