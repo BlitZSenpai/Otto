@@ -46,7 +46,7 @@ export const ourFileRouter = {
 
         await PineconeStore.fromDocuments(pageLevelDocs, embeddings, {
           pineconeIndex,
-          filter: { file: createdFile.id },
+          filter: { fileId: createdFile.id },
         });
 
         await db.file.update({
