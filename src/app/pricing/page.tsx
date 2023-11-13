@@ -3,7 +3,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { PLANS } from "@/config/stripe";
 import { cn } from "@/lib/utils";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { HelpCircle } from "lucide-react";
+import { Check, HelpCircle, Minus } from "lucide-react";
 
 const Page = () => {
   const { getUser } = getKindeServerSession();
@@ -110,6 +110,42 @@ const Page = () => {
                       </Tooltip>
                     </div>
                   </div>
+                  <ul className="my-10 space-y-5 px-8">
+                    {features.map(({ text, footnote, negative }) => (
+                      <li key={text} className="flex space-x-5">
+                        <div className="flex-shrink-0">
+                          {negative ? (
+                            <Minus className="h-6 w-6 text-gray-300" />
+                          ) : (
+                            <Check className="h-6 w-6 text-blue-500" />
+                          )}
+                        </div>
+                        {footnote ? (
+                          <div className="flex items-center space-x-1">
+                            <p
+                              className={cn("text-gray-600", {
+                                "text-gray-400": negative,
+                              })}>
+                              {text}
+                            </p>
+                            <Tooltip delayDuration={300}>
+                              <TooltipTrigger className="cursor-default ml-1.5">
+                                <HelpCircle className="h-4 w-4 text-zinc-500" />
+                              </TooltipTrigger>
+                              <TooltipContent className="w-80 p-2">{footnote}</TooltipContent>
+                            </Tooltip>
+                          </div>
+                        ) : (
+                          <p
+                            className={cn("text-gray-600", {
+                              "text-gray-400": negative,
+                            })}>
+                            {text}
+                          </p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               );
             })}
