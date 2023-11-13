@@ -1,13 +1,16 @@
 import MaxWidthWrapper from "@/components/maxwidthwrapper";
+import { buttonVariants } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { UpgradeButton } from "@/components/upgradebutton";
 import { PLANS } from "@/config/stripe";
 import { cn } from "@/lib/utils";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { Check, HelpCircle, Minus } from "lucide-react";
+import { ArrowRight, Check, HelpCircle, Minus } from "lucide-react";
+import Link from "next/link";
 
-const Page = () => {
+const Page = async () => {
   const { getUser } = getKindeServerSession();
-  const user = getUser();
+  const user = await getUser();
 
   const pricingItems = [
     {
@@ -146,6 +149,31 @@ const Page = () => {
                       </li>
                     ))}
                   </ul>
+                  <div className="border-t border-gray-200" />
+                  <div className="p-5">
+                    {plan === "Free" ? (
+                      <Link
+                        href={user ? "/dashboard" : "/sign-in"}
+                        className={buttonVariants({
+                          className: "w-full",
+                          variant: "secondary",
+                        })}>
+                        {user ? "Upgrade now" : "Sign up"}
+                        <ArrowRight className="h-5 w-5 ml-1.5" />
+                      </Link>
+                    ) : user ? (
+                      <UpgradeButton />
+                    ) : (
+                      <Link
+                        href="/sign-in"
+                        className={buttonVariants({
+                          className: "w-full",
+                        })}>
+                        {user ? "Upgrade now" : "Sign up"}
+                        <ArrowRight className="h-5 w-5 ml-1.5" />
+                      </Link>
+                    )}
+                  </div>
                 </div>
               );
             })}
