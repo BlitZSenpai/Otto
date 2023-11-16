@@ -158,7 +158,7 @@ const Page = async () => {
                           className: "w-full",
                           variant: "secondary",
                         })}>
-                        {user ? "Upgrade" : "Sign up"}
+                        {user ? "Try now" : "Sign up"}
                         <ArrowRight className="h-4 w-4 ml-1.5" />
                       </Link>
                     ) : user ? (
