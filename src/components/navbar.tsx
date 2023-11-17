@@ -3,6 +3,7 @@ import MaxWidthWrapper from "./maxwidthwrapper";
 import { buttonVariants } from "./ui/button";
 import { RegisterLink, LoginLink, getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { UserAccountNav } from "./useraccountnav";
+import { MobileNavbar } from "./mobilenavbar";
 
 const Navbar = async () => {
   const { getUser } = getKindeServerSession();
@@ -15,6 +16,7 @@ const Navbar = async () => {
           <Link href="/" className="flex z-40 font-semibold">
             <span>Otto.</span>
           </Link>
+          <MobileNavbar isAuth={!!user} />
 
           <div className="hidden items-center space-x-4 sm:flex">
             {!user ? (
