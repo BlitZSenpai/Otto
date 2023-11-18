@@ -85,7 +85,7 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
                 <Cloud className="h-6 w-6 text-zinc-500 mb-2" />
                 <p className="mb-2 text-sm text-zinc-700 font-semibold">Click to upload or drag and drop</p>
-                <p className="text-xs text-zinc-600">PDF (upto 4MB)</p>
+                <p className="text-xs text-zinc-600">PDF (upto {!isSubscribed ? "4" : "16"}MB)</p>
               </div>
               {acceptedFiles && acceptedFiles[0] ? (
                 <div className="max-w-xs bg-white flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200">
