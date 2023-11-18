@@ -11,7 +11,7 @@ import { useToast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
 import { trpc } from "@/app/_trpc/client";
 
-const UploadDropzone = () => {
+const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
   const router = useRouter();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadPorgress, setUploadProgress] = useState(0);
@@ -25,7 +25,7 @@ const UploadDropzone = () => {
     retryDelay: 500,
   });
 
-  const { startUpload } = useUploadThing("pdfUploader");
+  const { startUpload } = useUploadThing(!isSubscribed ? "freePlanUploader" : "proPlanUploader");
 
   const startSimulatedProgress = () => {
     setUploadProgress(0);
@@ -119,7 +119,7 @@ const UploadDropzone = () => {
   );
 };
 
-export const UploadButton = () => {
+export const UploadButton = ({ isSubscribed }: { isSubscribed: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -134,7 +134,7 @@ export const UploadButton = () => {
         <Button>Upload PDF</Button>
       </DialogTrigger>
       <DialogContent>
-        <UploadDropzone />
+        <UploadDropzone isSubscribed={isSubscribed} />
       </DialogContent>
     </Dialog>
   );
