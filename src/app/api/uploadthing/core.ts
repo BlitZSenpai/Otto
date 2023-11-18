@@ -112,6 +112,9 @@ export const ourFileRouter = {
   freePlanUploader: f({ pdf: { maxFileSize: "4MB" } })
     .middleware(middleware)
     .onUploadComplete(onUploadComplete),
+  proPlanUploader: f({ pdf: { maxFileSize: "16MB" } })
+    .middleware(middleware)
+    .onUploadComplete(onUploadComplete),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
