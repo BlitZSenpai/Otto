@@ -150,7 +150,7 @@ const Page = async () => {
                     ))}
                   </ul>
                   <div className="border-t border-gray-200" />
-                  <div className="p-5">
+                  <div className="p-5  flex items-center justify-center">
                     {plan === "Free" ? (
                       <Link
                         href={user ? "/dashboard" : "/sign-in"}
@@ -158,8 +158,8 @@ const Page = async () => {
                           className: "w-full",
                           variant: "secondary",
                         })}>
-                        Get started
-                        <ArrowRight className="h-4 w-4 ml-1.5" />
+                        Continue for Free
+                        <ArrowRight className="h-4 w-4 ml-0.5" />
                       </Link>
                     ) : user ? (
                       <UpgradeButton />
@@ -170,7 +170,7 @@ const Page = async () => {
                           className: "w-full",
                         })}>
                         Upgrade
-                        <ArrowRight className="h-4 w-4 ml-1.5" />
+                        <ArrowRight className="h-4 w-4 ml-0.5" />
                       </Link>
                     )}
                   </div>
